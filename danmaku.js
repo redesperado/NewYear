@@ -18,7 +18,7 @@ class DanmakuManager {
             "写个祝福，传递温暖"
         ];
         this.currentTipIndex = 0;
-        this.storageKey = 'spring_festival_greetings';
+        this.apiBaseUrl = 'http://localhost:3000/api';
 
         this.setupUI();
         this.setupCanvas();
@@ -26,64 +26,60 @@ class DanmakuManager {
         this.loadGreetings();
         this.animate();
         this.startTipAnimation();
+        
+        // 定期刷新贺词
+        setInterval(() => this.loadGreetings(), 30000); // 每30秒刷新一次
     }
 
     async loadGreetings() {
         try {
-            // 尝试从localStorage加载贺词
-            let greetings = localStorage.getItem(this.storageKey);
-            if (greetings) {
-                this.danmakuList = JSON.parse(greetings);
-            } else {
-                // 如果没有本地存储的贺词，加载默认贺词
-                const response = await fetch('default-greetings.json');
-                const data = await response.json();
-                this.danmakuList = data.greetings.map(greeting => ({
-                    text: greeting.text,
-                    x: Math.random() * window.innerWidth,
-                    y: Math.floor(Math.random() * this.lanes) * 40 + 40,
-                    speed: 2 + Math.random() * 2,
-                    color: `hsl(${Math.random() * 360}, 100%, 70%)`,
-                    timestamp: greeting.timestamp
-                }));
-                this.saveGreetings();
-            }
+            const response = await fetch(`${this.apiBaseUrl}/greetings`);
+            if (!response.ok) throw new Error('Failed to fetch greetings');
+            
+            const data = await response.json();
+            // 转换数据格式并随机分配位置和颜色
+            this.danmakuList = data.greetings.map(greeting => ({
+                text: greeting.text,
+                x: Math.random() * window.innerWidth,
+                y: Math.floor(Math.random() * this.lanes) * 40 + 40,
+                speed: 2 + Math.random() * 2,
+                color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+                timestamp: greeting.timestamp
+            }));
         } catch (error) {
             console.error('Failed to load greetings:', error);
-            this.danmakuList = [];
         }
     }
 
-    saveGreetings() {
+    async addDanmaku(text) {
         try {
-            localStorage.setItem(this.storageKey, JSON.stringify(this.danmakuList));
-        } catch (error) {
-            console.error('Failed to save greetings:', error);
-            // 如果存储空间满了，删除最早的贺词
-            if (error.name === 'QuotaExceededError') {
-                this.danmakuList = this.danmakuList.slice(-500); // 只保留最新的500条
-                this.saveGreetings();
+            const response = await fetch(`${this.apiBaseUrl}/greetings`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text })
+            });
+
+            if (!response.ok) throw new Error('Failed to add greeting');
+
+            const newGreeting = await response.json();
+            const danmaku = {
+                text: newGreeting.text,
+                x: this.canvas.width,
+                y: Math.floor(Math.random() * this.lanes) * 40 + 40,
+                speed: 2 + Math.random() * 2,
+                color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+                timestamp: newGreeting.timestamp
+            };
+
+            this.danmakuList.push(danmaku);
+            if (this.danmakuList.length > this.maxDanmaku) {
+                this.danmakuList.shift();
             }
+        } catch (error) {
+            console.error('Failed to add danmaku:', error);
         }
-    }
-
-    addDanmaku(text) {
-        const danmaku = {
-            text,
-            x: this.canvas.width,
-            y: Math.floor(Math.random() * this.lanes) * 40 + 40,
-            speed: 2 + Math.random() * 2,
-            color: `hsl(${Math.random() * 360}, 100%, 70%)`,
-            timestamp: Date.now()
-        };
-
-        this.danmakuList.push(danmaku);
-        if (this.danmakuList.length > this.maxDanmaku) {
-            this.danmakuList.shift();
-        }
-
-        // 保存到localStorage
-        this.saveGreetings();
     }
 
     setupUI() {
@@ -235,8 +231,6 @@ class DanmakuManager {
             if (danmaku.x < -500) {
                 danmaku.x = this.canvas.width;
                 danmaku.y = Math.floor(Math.random() * this.lanes) * 40 + 40;
-                // 更新存储
-                this.saveGreetings();
             }
 
             // 绘制弹幕
