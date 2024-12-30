@@ -1,0 +1,9 @@
+{
+  "name": "countdown-time",
+  "version": "1.0.0",
+  "description": "农历新年倒计时",
+  "main": "script.js",
+  "dependencies": {
+    "lunar-javascript": "^1.6.7"
+  }
+}

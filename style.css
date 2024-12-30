@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --neon-green: #00ff00;
+    --neon-blue: #00ffff;
+    --neon-pink: #ff69b4;
+    --neon-purple: #9d00ff;
+}
+
+body {
+    background-color: #0a0a0a;
+    background-image: url('./images/zhengzhou.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--neon-green);
+    font-family: 'Orbitron', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.6) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.6) 100%
+    );
+    z-index: 1;
+}
+
+.container {
+    text-align: center;
+    z-index: 2;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+}
+
+.glitch-wrapper {
+    margin-bottom: 1rem;
+}
+
+.glitch {
+    font-size: 5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    position: relative;
+    text-shadow: 0.05em 0 0 var(--neon-blue), 
+                -0.03em -0.04em 0 var(--neon-pink),
+                0.025em 0.04em 0 var(--neon-purple);
+    animation: glitch 725ms infinite;
+}
+
+.message {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #ffffff;
+    text-shadow: 0 0 5px var(--neon-blue);
+    letter-spacing: 2px;
+}
+
+.countdown-container {
+    display: flex;
+    gap: 2rem;
+    margin: 1rem 0;
+}
+
+.countdown-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    min-width: 140px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2),
+                inset 0 0 15px rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.countdown-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 25px rgba(255, 255, 255, 0.3),
+                inset 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.countdown-item::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+.number {
+    font-size: 3.5rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, var(--neon-blue), var(--neon-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+.label {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    color: #ffffff;
+    text-shadow: 0 0 5px var(--neon-blue);
+    letter-spacing: 1px;
+}
+
+.cyberpunk-lines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: 
+        linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px) 0 0 / 20px 20px,
+        linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px) 0 0 / 20px 20px;
+    animation: moveLines 20s linear infinite;
+    z-index: 1;
+}
+
+.lunar-date, .solar-date {
+    font-size: 1.3rem;
+    color: #ffffff;
+    text-shadow: 0 0 5px var(--neon-pink);
+    margin: 1rem 0;
+    letter-spacing: 2px;
+    opacity: 0.9;
+}
+
+.lunar-date {
+    margin-bottom: 0.5rem;
+    color: var(--neon-blue);
+    font-weight: bold;
+}
+
+.solar-date {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.highlight {
+    color: #ff3860;
+    text-shadow: 0 0 10px rgba(255, 56, 96, 0.8);
+    font-weight: bold;
+    animation: neon-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glitch {
+    0% {
+        text-shadow: 0.05em 0 0 var(--neon-blue), 
+                    -0.03em -0.04em 0 var(--neon-pink),
+                    0.025em 0.04em 0 var(--neon-purple);
+    }
+    15% {
+        text-shadow: 0.05em 0 0 var(--neon-blue), 
+                    -0.03em -0.04em 0 var(--neon-pink),
+                    0.025em 0.04em 0 var(--neon-purple);
+    }
+    16% {
+        text-shadow: -0.05em -0.025em 0 var(--neon-blue),
+                    0.025em 0.035em 0 var(--neon-pink),
+                    -0.05em -0.05em 0 var(--neon-purple);
+    }
+    49% {
+        text-shadow: -0.05em -0.025em 0 var(--neon-blue),
+                    0.025em 0.035em 0 var(--neon-pink),
+                    -0.05em -0.05em 0 var(--neon-purple);
+    }
+    50% {
+        text-shadow: 0.05em 0.035em 0 var(--neon-blue),
+                    0.03em 0 0 var(--neon-pink),
+                    0 -0.04em 0 var(--neon-purple);
+    }
+    99% {
+        text-shadow: 0.05em 0.035em 0 var(--neon-blue),
+                    0.03em 0 0 var(--neon-pink),
+                    0 -0.04em 0 var(--neon-purple);
+    }
+    100% {
+        text-shadow: -0.05em 0 0 var(--neon-blue),
+                    -0.025em -0.04em 0 var(--neon-pink),
+                    -0.04em -0.025em 0 var(--neon-purple);
+    }
+}
+
+@keyframes shine {
+    0% {
+        left: -50%;
+    }
+    100% {
+        left: 150%;
+    }
+}
+
+@keyframes moveLines {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(20px);
+    }
+}
+
+@keyframes neon-pulse {
+    0%, 100% {
+        text-shadow: 0 0 10px rgba(255, 56, 96, 0.8);
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(255, 56, 96, 1),
+                     0 0 30px rgba(255, 56, 96, 0.8);
+    }
+}
+
+@media (max-width: 768px) {
+    .countdown-container {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .countdown-item {
+        min-width: 120px;
+        padding: 1rem;
+    }
+    
+    .number {
+        font-size: 2.5rem;
+    }
+    
+    .glitch {
+        font-size: 3rem;
+    }
+}
