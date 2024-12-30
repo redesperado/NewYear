@@ -18,7 +18,11 @@ class DanmakuManager {
             "写个祝福，传递温暖"
         ];
         this.currentTipIndex = 0;
-        this.apiBaseUrl = 'http://localhost:3000/api';
+        
+        // 根据环境设置API基础URL
+        this.apiBaseUrl = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3000/api'
+            : '/api';  // 在生产环境中使用相对路径
 
         this.setupUI();
         this.setupCanvas();
