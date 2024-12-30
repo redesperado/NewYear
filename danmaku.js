@@ -44,7 +44,8 @@ class DanmakuManager {
                 y: Math.floor(Math.random() * this.lanes) * 40 + 40,
                 speed: 2 + Math.random() * 2,
                 color: `hsl(${Math.random() * 360}, 100%, 70%)`,
-                timestamp: greeting.timestamp
+                timestamp: greeting.timestamp,
+                active: true
             }));
         } catch (error) {
             console.error('Failed to load greetings:', error);
@@ -66,11 +67,12 @@ class DanmakuManager {
             const newGreeting = await response.json();
             const danmaku = {
                 text: newGreeting.text,
-                x: this.canvas.width,
+                x: window.innerWidth, // Start from the right edge of the screen
                 y: Math.floor(Math.random() * this.lanes) * 40 + 40,
                 speed: 2 + Math.random() * 2,
                 color: `hsl(${Math.random() * 360}, 100%, 70%)`,
-                timestamp: newGreeting.timestamp
+                timestamp: newGreeting.timestamp,
+                active: true // Add active flag
             };
 
             this.danmakuList.push(danmaku);
@@ -220,20 +222,23 @@ class DanmakuManager {
     }
 
     animate() {
+        // Clear the entire canvas
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // 更新和绘制弹幕
-        this.danmakuList.forEach((danmaku, index) => {
-            // 更新位置
+        // Update and draw danmaku
+        this.danmakuList.forEach(danmaku => {
+            // Update position
             danmaku.x -= danmaku.speed;
 
-            // 如果弹幕移出屏幕，重置到右侧
-            if (danmaku.x < -500) {
+            // If danmaku is off screen, reset to right side
+            if (danmaku.x < -this.ctx.measureText(danmaku.text).width) {
                 danmaku.x = this.canvas.width;
+                // Randomize the vertical position and speed for variety
                 danmaku.y = Math.floor(Math.random() * this.lanes) * 40 + 40;
+                danmaku.speed = 2 + Math.random() * 2;
             }
 
-            // 绘制弹幕
+            // Draw danmaku
             this.ctx.save();
             this.ctx.fillStyle = danmaku.color;
             this.ctx.font = '24px "Microsoft YaHei"';
